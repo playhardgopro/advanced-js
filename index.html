@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+  <script>
+    // NOTE: Part 1 allKeysAndSymbols
+    // Написать функцию, которая принимает объект и возвращает все свойства и символы как в самом объекте,
+    // так и во всей его цепочке прототипов.
+
+    function allKeysAndSymbols(object) {
+      // console.log(object);
+    }
+
+    allKeysAndSymbols({}); // ["constructor", "__defineGetter__", "__defineSetter__", "hasOwnProperty", ... ]
+
+    //NOTE: Part 2 in, который игнорирует свойства прототипа
+    // Написать прокси-объект, для которого оператор in вернет истину только в том случает,
+    // когда свойство находится в самом объекте, но не в его прототипе.
+    const proto = { value: 42 };
+    const object = Object.create(proto);
+
+    Object.defineProperty(object, 'year', {
+      value: 2020,
+      writable: true,
+      configurable: true,
+      enumerable: false,
+    });
+
+    const symbol = Symbol('bazzinga');
+    object[symbol] = 42;
+
+    // без proxy
+    console.log('value' in object); // true
+    console.log('year' in object); // true
+    console.log(symbol in object); // true
+
+    const proxy = new Proxy(object, {
+      has(target, key) {
+        if (target.hasOwnProperty(key)) {
+          return true;
+        }
+        return false;
+      },
+    }); // реализация
+    // с proxy
+    console.log('value' in proxy); // false
+    console.log('year' in proxy); // true
+    console.log(symbol in proxy); // true
+  </script>
+</html>
