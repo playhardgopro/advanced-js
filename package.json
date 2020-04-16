@@ -1,0 +1,22 @@
+{
+  "name": "advanced-js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/playhardgopro/advanced-js.git"
+  },
+  "author": "Daniel Egortsev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/playhardgopro/advanced-js/issues"
+  },
+  "homepage": "https://github.com/playhardgopro/advanced-js#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
