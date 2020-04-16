@@ -33,10 +33,10 @@
     //#region // NOTE: Part 2 in, который игнорирует свойства прототипа
     // Написать прокси-объект, для которого оператор in вернет истину только в том случает,
     // когда свойство находится в самом объекте, но не в его прототипе.
-    // const proto = { value: 42 };
-    // const object = Object.creat(proto);
+    const proto2 = { value: 42 };
+    const object2 = Object.create(proto2);
 
-    Object.defineProperty(object, 'year', {
+    Object.defineProperty(object2, 'year', {
       value: 2020,
       writable: true,
       configurable: true,
@@ -44,14 +44,14 @@
     });
 
     const symbol = Symbol('bazzinga');
-    object[symbol] = 42;
+    object2[symbol] = 42;
 
     // без proxy
-    // console.log('value' in object); // true
-    // console.log('year' in object); // true
-    // console.log(symbol in object); // true
+    console.log('value' in object2); // true
+    console.log('year' in object2); // true
+    console.log(symbol in object2); // true
 
-    const proxy = new Proxy(object, {
+    const proxy = new Proxy(object2, {
       has(target, key) {
         if (target.hasOwnProperty(key)) {
           return true;
@@ -60,9 +60,9 @@
       },
     }); // реализация
     // с proxy
-    // console.log('value' in proxy); // false
-    // console.log('year' in proxy); // true
-    // console.log(symbol in proxy); // true
+    console.log('value' in proxy); // false
+    console.log('year' in proxy); // true
+    console.log(symbol in proxy); // true
     //#endregion
 
     //#region // NOTE: Part 3 asyncExecutor
@@ -71,6 +71,24 @@
 
     function asyncExecutor(generator) {
       // реализация
+      const it = generator();
+
+      (function iterate(value) {
+        const result = it.next(value);
+
+        if (!result.done) {
+          //NOTE: можно еще проверять через ('then' in result.value)
+          if (Promise.resolve(result.value) === result.value) {
+            result.value.then(iterate);
+          } else {
+            //NOTE: на случай, если вдруг будет что-то синхронное
+            //NOTE: добавил в тесты Data2-4
+            setTimeout(function () {
+              iterate(result.value);
+            }, 0);
+          }
+        }
+      })();
     }
 
     // тесты
@@ -98,7 +116,14 @@
 
       const id = yield getId();
       const data = yield getDataById(id);
+      const data2 = yield 'Эта строка не появится, если не использовать setTimeout()';
+      const data3 = yield 'И эта строка не появится';
+      const data4 = yield 'Ничего не появится :(';
+
       console.log('Data', data);
+      console.log('Data2', data2);
+      console.log('Data3', data3);
+      console.log('Data4', data4);
 
       console.timeEnd('Time');
     });
@@ -185,9 +210,9 @@
     }
     // есть метод clear
     set.clear();
-    console.log(set.size); // 0
+    console.log(set.size, '// 0'); // 0
 
-    const object2 = {
+    const object4 = {
       getValue() {
         return this.value;
       },
@@ -198,7 +223,7 @@
     };
 
     // есть метод add
-    set.add(object2);
+    set.add(object4);
     console.log([...set], 'add1');
     set.add(data);
     console.log([...set], 'add2');
@@ -208,19 +233,19 @@
     console.log([...set], 'delete');
 
     // есть метод has
-    console.log(set.has({})); // false
-    console.log(set.has(object2)); // true
-    console.log(set.has(data)); // false
+    console.log(set.has({}), '// false'); // false
+    console.log(set.has(object4), '// true'); // true
+    console.log(set.has(data), '// false'); // false
 
     // и кое-что еще
-    console.log(set === set.valueOf()); // true
-    console.log(String(set)); // [object MySet]
-    console.log(Object.prototype.toString.call(set)); // [object MySet]
+    console.log(set === set.valueOf(), '// true'); // true
+    console.log(String(set), '// [object MySet]'); // [object MySet]
+    console.log(Object.prototype.toString.call(set), '// [object MySet]'); // [object MySet]
 
     // задание со звездочкой *
     // есть forEach, который делает какие-то странные вещи...
     set.forEach(function (item) {
-      console.log(item.getValue.call(this)); // 42
+      console.log(item.getValue.call(this), '// 42'); // 42
     }, data);
     //#endregion
   </script>
