@@ -11,6 +11,7 @@
     //#region // NOTE: Part 1 allKeysAndSymbols
     // Написать функцию, которая принимает объект и возвращает все свойства и символы как в самом объекте,
     // так и во всей его цепочке прототипов.
+    console.log('_______________Part 1_______________');
 
     const proto = { value: 42 };
     const object = Object.create(proto);
@@ -33,6 +34,8 @@
     //#region // NOTE: Part 2 in, который игнорирует свойства прототипа
     // Написать прокси-объект, для которого оператор in вернет истину только в том случает,
     // когда свойство находится в самом объекте, но не в его прототипе.
+    console.log('_______________Part 2_______________');
+
     const proto2 = { value: 42 };
     const object2 = Object.create(proto2);
 
@@ -47,9 +50,9 @@
     object2[symbol] = 42;
 
     // без proxy
-    console.log('value' in object2); // true
-    console.log('year' in object2); // true
-    console.log(symbol in object2); // true
+    console.log('value' in object2, '// true'); // true
+    console.log('year' in object2, '// true'); // true
+    console.log(symbol in object2, '// true'); // true
 
     const proxy = new Proxy(object2, {
       has(target, key) {
@@ -60,14 +63,17 @@
       },
     }); // реализация
     // с proxy
-    console.log('value' in proxy); // false
-    console.log('year' in proxy); // true
-    console.log(symbol in proxy); // true
+    console.log('value' in proxy, '// false'); // false
+    console.log('year' in proxy, '// true'); // true
+    console.log(symbol in proxy, '// true'); // true
     //#endregion
 
     //#region // NOTE: Part 3 asyncExecutor
     // Написать функцию, которая позволит использовать внутри генератора асинхронные вызовы.
     // Реализация на Promise, async/await использовать запрещено.
+    setTimeout(() => {
+      console.log('_______________Part 3_______________');
+    }, 2000);
 
     function asyncExecutor(generator) {
       // реализация
@@ -131,6 +137,7 @@
 
     //#region // NOTE: Part 4 Дополнительное задание: собственная реализация Set
     // Написать свой класс, который будет очень поход на ES6 множества.
+    console.log('_______________Part 4_______________');
 
     class MySet {
       constructor(set) {
