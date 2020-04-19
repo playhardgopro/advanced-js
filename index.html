@@ -40,15 +40,21 @@
     const object = Object.create(proto);
 
     function allKeysAndSymbols(object) {
-      // let result = false;
-      // for (let prop in object) {
-      //   console.log(prop);
-      //   result = [(prop, Object.getPrototypeOf(prop))];
-      // }
-      // console.log(result);
-      // console.log(Object.getPrototypeOf(object), 'prototype');
-      // console.log(object);
-      // console.log(object.__proto__);
+      // реализация
+      let tmp = object;
+      const tmpResult = new Set();
+      while (tmp) {
+        const props = Object.keys(Object.getOwnPropertyDescriptors(tmp));
+        const symbols = Object.getOwnPropertySymbols(tmp);
+
+        props.forEach((el) => tmpResult.add(el));
+        symbols.forEach((el) => tmpResult.add(el));
+
+        tmp = tmp.__proto__;
+      }
+      const result = [...tmpResult];
+
+      console.log(result);
     }
 
     allKeysAndSymbols(object); // ["constructor", "__defineGetter__", "__defineSetter__", "hasOwnProperty", ... ]
@@ -233,7 +239,6 @@
       console.log(item); // 4 8 15 16 23 42
     }
     //FIXME: [4,4]
-
     // есть методы keys, values, entries
     for (const item of set.entries()) {
       console.log(item); // [ 4, 4 ] [ 8, 8 ] ...
